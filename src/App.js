@@ -5,12 +5,23 @@ import './App.css';
 import FavoriteBreweries from './components/FavoriteBreweries/FavoriteBreweries';
 import Header from './components/Header/Header';
 
+const baseUrl = 'http://localhost:3002';
+
 class App extends Component {
   state = {
     breweries: [],
     favoriteBreweryIds: [],
     query: '',
   };
+
+  componentWillMount() {
+    axios.get(`${baseUrl}/api/favorites`)
+      .then(response => {
+        this.setState({
+          favoriteBreweryIds: response.data,
+        });
+      });
+  }
   
   render() {
     const breweriesListItems = this.state.breweries
@@ -43,7 +54,9 @@ class App extends Component {
           {breweriesListItems}
         </ul>
         
-        <FavoriteBreweries favoriteBreweries={this.state.favoriteBreweryIds} />
+        <FavoriteBreweries
+            favoriteBreweries={this.state.favoriteBreweryIds}
+            onBreweryDelete={id => this.deleteFromFavorites(id)} />
       </div>
     );
   }
@@ -67,6 +80,15 @@ class App extends Component {
 
   addToFavorites(id) {
     axios.post('http://localhost:3002/api/favorites', { id })
+      .then(response => {
+        this.setState({
+          favoriteBreweryIds: response.data,
+        });
+      });
+  }
+
+  deleteFromFavorites(id) {
+    axios.delete('http://localhost:3002/api/favorites/' + id)
       .then(response => {
         this.setState({
           favoriteBreweryIds: response.data,

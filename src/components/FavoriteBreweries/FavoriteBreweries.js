@@ -23,7 +23,12 @@ class FavoriteBreweries extends Component {
             .map(brewery => (
                 <div className="card" key={brewery.id}>
                     <h3>{brewery.name}</h3>
-                    <button type="button">💔</button>
+                    <button
+                        type="button"
+                        onClick={() => this.props.onBreweryDelete(brewery.id)}
+                    >
+                        💔
+                    </button>
                 </div>
             ));
         
